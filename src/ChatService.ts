@@ -8,7 +8,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: process.env["FRONTEND_URL"] || "http://localhost:4200",
   },
 });
 
@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
 });
 
 // --- Iniciar servidor ---
-const PORT = 4000;
+const PORT = process.env["PORT"] || 3000;
 server.listen(PORT, () => {
   console.log(`Chat service running on port ${PORT}`);
 });
