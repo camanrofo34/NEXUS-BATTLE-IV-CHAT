@@ -9,7 +9,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env["FRONTEND_URL"] || "http://localhost:4200",
+    origin: process.env["FRONTEND_URL"]?.split(",") ?? [],
   },
 });
 
@@ -26,6 +26,12 @@ io.on("connection", (socket) => {
       user: playerId,
       message: msg,
     });
+  });
+
+  // Actualización de salas
+  socket.on("update:rooms", () => {
+    console.log("Actualizando salas...");
+    io.to("global").emit("update:rooms");
   });
 
   // Unir a sala de batalla
@@ -50,6 +56,8 @@ io.on("connection", (socket) => {
   });
 });
 
+console.log(process.env["FRONTEND_URL"]);
+console.log(process.env["PORT"]);
 // --- Iniciar servidor ---
 const PORT = process.env["PORT"] || 4000;
 server.listen(PORT, () => {
